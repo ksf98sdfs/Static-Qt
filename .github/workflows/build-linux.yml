@@ -48,7 +48,7 @@ jobs:
           -no-accessibility \
           -qt-doubleconversion \
           -no-icu \
-          -openssl-linked OPENSSL_LIBS="-llibcrypto -llibssl" \
+          -openssl-linked OPENSSL_LIBS="-libcrypto -libssl" \
           -I "${{ env.openssl_header_location }}" \
           -L "${{ env.openssl_lib_location }}" \
           -no-schannel \
