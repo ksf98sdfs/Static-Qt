@@ -11,7 +11,8 @@ on:
 env:
   Qt_minor_version: 5.15
   Qt_patch_version: 5.15.15
-  openssl_location: C:\Program Files\OpenSSL
+  openssl_header_location: /usr/include
+  openssl_lib_location: /usr/lib/x86_64-linux-gnu
   BUILD_TYPE: Release
   
 jobs:
@@ -47,7 +48,9 @@ jobs:
           -no-accessibility \
           -qt-doubleconversion \
           -no-icu \
-          -openssl-linked \
+          -openssl-linked OPENSSL_LIBS="-llibcrypto -llibssl" \
+          -I "${{ env.openssl_header_location }}" \
+          -L "${{ env.openssl_lib_location }}" \
           -no-schannel \
           -no-securetransport \
           -no-cups \
