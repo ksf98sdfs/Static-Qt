@@ -5,19 +5,9 @@ set( library_name Static-Qt-Test )
 project( ${library_name} CXX )
 
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
-set( CMAKE_AUTOMOC ON )
-set( CMAKE_AUTORCC ON )
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 set( CMAKE_CXX_EXTENSIONS OFF )
-set( QT_FULL_VERSION 5.15.15 )
-if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
-	set( QT_DIRECTORY "C:/Qt/Qt-${QT_FULL_VERSION}/lib/cmake/Qt5" )
-elseif( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
-	set( QT_DIRECTORY "/usr/local/Qt-${QT_FULL_VERSION}/lib/cmake/Qt5" )
-elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
-	set( QT_DIRECTORY "/usr/local/Qt-${QT_FULL_VERSION}/lib/cmake/Qt5" )
-endif()
 
 # Enable static linkage of runtime on MSVC
 if( MSVC )
@@ -36,13 +26,14 @@ if( MSVC )
 	set( CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup" )
 endif()
 
-list( APPEND Qt5_DIR ${QT_DIRECTORY} )
-
 # Locate OpenSSL's libraries and header files.
 find_package( OpenSSL REQUIRED )
 
-# Locate Qt's libraries and header files.
-find_package( Qt5 REQUIRED COMPONENTS Core Gui Network Widgets )
+message(STATUS "OpenSSL found: ${OPENSSL_FOUND}")
+message(STATUS "Using OpenSSL version: ${OPENSSL_VERSION}")
+message(STATUS "The OpenSSL include directory: ${OPENSSL_INCLUDE_DIR}")
+message(STATUS "The OpenSSL crypto library: ${OPENSSL_CRYPTO_LIBRARY}")
+message(STATUS "The OpenSSL SSL library: ${OPENSSL_SSL_LIBRARIES}")
 
 file( GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/src/*.hpp ${PROJECT_SOURCE_DIR}/src/*.qrc )
 
@@ -63,7 +54,7 @@ endif()
 if( CMAKE_SYSTEM_NAME STREQUAL "Windows" )
 	target_link_libraries( ${library_name} PRIVATE Qt5::Core Qt5::Gui Qt5::Network Qt5::Widgets OpenSSL::Crypto OpenSSL::SSL crypt32.lib ws2_32.lib )
 elseif( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
-	target_link_libraries( ${library_name} PRIVATE Qt5::Core Qt5::Gui Qt5::Network Qt5::Widgets OpenSSL::Crypto OpenSSL::SSL )
+	target_link_libraries( ${library_name} PRIVATE OpenSSL::Crypto OpenSSL::SSL )
 elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
 	target_link_libraries( ${library_name} PRIVATE Qt5::Core Qt5::Gui Qt5::Network Qt5::Widgets OpenSSL::Crypto OpenSSL::SSL )
 endif()
